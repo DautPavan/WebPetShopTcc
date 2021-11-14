@@ -1,8 +1,20 @@
-<po-page-list p-title="PO Page List"
-  [p-actions]="actionOptions">
+<po-page-list
+  p-title=""
+  [p-actions]="actionOptions"
+  [p-filter]="filter">
+
+  <po-loading-overlay
+    [hidden]="!isTelaLoad">
+  </po-loading-overlay>
+
   <po-container po-container class="po-mt-5">
     <div class="po-row">
-
+      <po-table
+        class="po-md-12"
+        [p-items]='grid'
+        [p-columns]="columns"
+        [p-loading]="isGridLoad">
+      </po-table>
     </div>
   </po-container>
 </po-page-list>
@@ -14,3 +26,8 @@
 <app-nav-cadastro-racas
   (OutPageSlideRaca)="EventeMenuRaca($event)">
 </app-nav-cadastro-racas>
+
+<app-filtros-avacados
+  (OutPageSlide)="EventeMenuFiltro($event)"
+  (OutFiltros)="EventeFiltro($event)">
+</app-filtros-avacados>

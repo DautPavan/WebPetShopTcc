@@ -34,7 +34,9 @@
       class="po-md-12"
       name="combo"
       p-label="Porte"
-      [p-options]="[{ value: 'Option 1' }, { value: 'Option 2' }]">
+      [p-clean]="true"
+      [p-options]="options"
+      (p-change)="EscolherPorte($event)">
     </po-combo>
   </div>
 
@@ -52,7 +54,7 @@
 
 </po-page-slide>
 
-<!-- <po-modal
+<po-modal
   #poModalExclusaoLinha
   [p-hide-close]='true'
   p-title="Atenção"
@@ -62,4 +64,4 @@
     <p>Ao excluir este Raça suas informações não poderão ser recuperadas.</p>
     <p><b>Deseja realmente excluir o Raça?</b></p>
   </div>
-</po-modal> -->
+</po-modal>

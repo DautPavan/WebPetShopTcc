@@ -1,6 +1,6 @@
 import { Servicos } from './../../models/ServicoList';
-import { Component, EventEmitter, OnInit, Output, ViewChild, ViewChildren } from '@angular/core';
-import { PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoPageSlideComponent, PoTableColumn } from '@po-ui/ng-components';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewChildren } from '@angular/core';
+import { PoComboOption, PoComboOptionGroup, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoPageSlideComponent, PoTableColumn } from '@po-ui/ng-components';
 import { ServiceServicoService } from 'src/app/Services/service-servico.service';
 import { Raca } from 'src/app/models/Raca';
 
@@ -18,13 +18,29 @@ export class NavCadastroRacasComponent implements OnInit {
   isTelaLoad: boolean = false;
   isGridLoad: boolean = false;
   NomeRaca: string = "";
+  Combo: number = undefined;
   linhaExcluir: Raca = undefined;
+  options: Array<PoComboOption | PoComboOptionGroup> = [
+    { label: "Pequeno", value: 1 },
+    { label: "Medio", value: 2  },
+    { label: "Grande", value: 3 }
+  ];
 
   grid: Raca[];
 
   readonly columns: Array<PoTableColumn> = [
     { property: 'Nome', label: 'Nome da Raça', width: 'auto' },
-    { property: 'PorteRaca', label: 'Porte Raça', width: 'auto' }
+    {
+      property: 'PorteRaca',
+      label: 'Porte Raça',
+      width: 'auto',
+      type: 'label',
+      labels: [
+        { value: 1, color: 'color-01', label: 'Pequeno' },
+        { value: 2, color: 'color-08', label: 'Médio' },
+        { value: 3, color: 'color-03', label: 'Grande' }
+      ]
+    }
   ];
   actions: Array<PoPageAction> = [
     { label: 'Remover', action: this.removerGrupo.bind(this), icon: "po-icon po-icon-delete"}
@@ -56,11 +72,16 @@ export class NavCadastroRacasComponent implements OnInit {
 
   }
 
+  EscolherPorte(tipo: any){
+    this.Combo = tipo;
+  }
+
   SalvarGrupo(){
     this.isTelaLoad = true;
     var body: Raca = new Raca();
 
     body.Nome = this.NomeRaca;
+    body.PorteRaca = this.Combo;
 
     this._servico.postRaca(body).subscribe(x => {
       this.NomeRaca = "";
@@ -88,14 +109,14 @@ export class NavCadastroRacasComponent implements OnInit {
     this.linhaExcluir = linha;
     this.ModalExcluir.open();
   }
-  confirmarExclusaoServico: PoModalAction = {
+  confirmarExclusaoRaca: PoModalAction = {
     action: () => {
       this.RemoverLinha();
       this.ModalExcluir.close();
     },
     label: 'Confirmar'
   };
-  cancelarExclusaoServico: PoModalAction = {
+  cancelarExclusaoRaca: PoModalAction = {
     action: () => {
       this.linhaExcluir = undefined;
       this.ModalExcluir.close();
@@ -105,7 +126,7 @@ export class NavCadastroRacasComponent implements OnInit {
 
   RemoverLinha(){
     this.isGridLoad = true;
-    this._servico.deleteServicos(this.linhaExcluir.Id).subscribe(x => {
+    this._servico.deleteRaca(this.linhaExcluir.Id).subscribe(x => {
       this.isGridLoad = false;
       this._NotificationService.success("Raça excluído com sucesso.")
     },
