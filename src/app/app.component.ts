@@ -1,7 +1,7 @@
 import { grid } from './models/grid';
 import { Filtros } from './models/Filtros';
 import { Component, OnInit } from '@angular/core';
-import { PoMenuItem, PoNotificationService, PoPageAction, PoPageFilter, PoPageSlideComponent, PoTableColumn } from '@po-ui/ng-components';
+import { PoMenuItem, PoNotificationService, PoPageAction, PoPageFilter, PoPageSlideComponent, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
 import { ServiceServicoService } from './Services/service-servico.service';
 
 @Component({
@@ -21,8 +21,25 @@ export class AppComponent implements OnInit{
 
   grid: grid[];
 
+  actions: Array<PoTableAction> = [
+    { action: this.Iniciar.bind(this), icon: 'fas fa-play-circle', label: 'Iniciar' },
+    { action: this.Finalizar.bind(this), icon: 'fas fa-check-circle', label: 'Finalizar' },
+    { action: this.remove.bind(this), icon: 'po-icon po-icon-delete', label: 'Remove' }
+  ];
+
   readonly columns: Array<PoTableColumn> = [
     { property: 'HoraAgendada', label: 'Data Agend.', width: 'auto', type: 'dateTime'},
+    {
+      property: 'Status',
+      label: 'Atendimento',
+      width: 'auto',
+      type: 'label',
+      labels: [
+        { value: 0, color: 'color-07', label: 'Espera' },
+        { value: 1, color: 'color-03', label: 'Iniciado' },
+        { value: 2, color: 'color-10', label: 'Concluído' }
+      ]
+    },
     { property: 'NomeDono', label: 'Dono', width: 'auto' },
     { property: 'Email', label: 'Email Dono', width: 'auto', visible: false },
     { property: 'NomeAnimal', label: 'Pet', width: 'auto'},
@@ -33,7 +50,7 @@ export class AppComponent implements OnInit{
       type: 'label',
       labels: [
         { value: 1, color: 'color-07', label: 'Fêmea' },
-        { value: 2, color: 'color-01', label: 'Macho' },
+        { value: 2, color: 'color-02', label: 'Macho' },
       ]
     },
     {
@@ -44,7 +61,7 @@ export class AppComponent implements OnInit{
       labels: [
         { value: 1, color: 'color-01', label: 'Pequeno' },
         { value: 2, color: 'color-08', label: 'Médio' },
-        { value: 3, color: 'color-03', label: 'Grande' }
+        { value: 3, color: 'color-05', label: 'Grande' }
       ]
     },
     { property: 'NomeRaca', label: 'Raça', width: 'auto'},
@@ -94,6 +111,57 @@ export class AppComponent implements OnInit{
       this._NotificationService.error(error.error.menssage);
     });
 
+  }
+
+  remove(linha: grid){
+    this._servico.deleteAgenda(linha.Id).subscribe(x => {
+      this._NotificationService.success("Horário deletado com sucesso.");
+      this.isGridLoad = false;
+      this.carregarGrid();
+    },
+    error => {
+      if (error.status >= 400 && error.status < 500){
+        this.isGridLoad = false;
+        this._NotificationService.warning(error.error.menssage);
+        return;
+      }
+      this.isGridLoad = false;
+      this._NotificationService.error(error.error.menssage);
+    });
+  }
+
+  Iniciar(linha: grid){
+    this._servico.getIniciar(linha.Id).subscribe(x => {
+      this._NotificationService.success("Horário iniciado.");
+      this.isGridLoad = false;
+      this.carregarGrid();
+    },
+    error => {
+      if (error.status >= 400 && error.status < 500){
+        this.isGridLoad = false;
+        this._NotificationService.warning(error.error.menssage);
+        return;
+      }
+      this.isGridLoad = false;
+      this._NotificationService.error(error.error.menssage);
+    });
+  }
+
+  Finalizar(linha: grid){
+    this._servico.getFinalizar(linha.Id).subscribe(x => {
+      this._NotificationService.success("Horário finalizado.");
+      this.isGridLoad = false;
+      this.carregarGrid();
+    },
+    error => {
+      if (error.status >= 400 && error.status < 500){
+        this.isGridLoad = false;
+        this._NotificationService.warning(error.error.menssage);
+        return;
+      }
+      this.isGridLoad = false;
+      this._NotificationService.error(error.error.menssage);
+    });
   }
 
   //#endregion Metodos

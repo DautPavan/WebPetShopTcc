@@ -12,7 +12,7 @@ import { Servicos } from '../models/ServicoList';
 export class ServiceServicoService {
 
   //private readonly api = "https://localhost:44326/api"
-  private readonly api = "http://192.168.0.8:45600/api"
+  private readonly api = "http://192.168.0.6:45600/api"
 
   constructor(private http: HttpClient) { }
 
@@ -36,7 +36,16 @@ export class ServiceServicoService {
     return this.http.delete<any>(`${this.api}/Raca/Delete/${id}`).pipe(first())
   }
 
+  deleteAgenda(id: number){
+    return this.http.delete<any>(`${this.api}/Agenda/Delete/${id}`).pipe(first())
+  }
   getMontarGrid(data: Date){
     return this.http.get<grid[]>(`${this.api}/Agenda/MontarGrid?Data=${data.toISOString()}`).pipe(first())
+  }
+  getIniciar(id: number){
+    return this.http.get<any>(`${this.api}/Agenda/Iniciar/${id}`).pipe(first())
+  }
+  getFinalizar(id: number){
+    return this.http.get<any>(`${this.api}/Agenda/Finalizar/${id}`).pipe(first())
   }
 }

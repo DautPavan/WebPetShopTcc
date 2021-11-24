@@ -38,7 +38,7 @@ export class NavCadastroRacasComponent implements OnInit {
       labels: [
         { value: 1, color: 'color-01', label: 'Pequeno' },
         { value: 2, color: 'color-08', label: 'Médio' },
-        { value: 3, color: 'color-03', label: 'Grande' }
+        { value: 3, color: 'color-05', label: 'Grande' }
       ]
     }
   ];

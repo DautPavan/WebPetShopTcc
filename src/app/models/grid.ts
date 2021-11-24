@@ -1,4 +1,5 @@
 export interface Igrid {
+  Id: number;
   HoraAgendada: Date;
   NomeServico: string;
   Valor: number;
@@ -9,10 +10,12 @@ export interface Igrid {
   PorteAnimal: number
   GeneroBiologico: number;
   NomeRaca: string;
+  Status: number;
 }
 
 export class grid implements Igrid {
-  HoraAgendada: Date = undefined;;
+  Id: number = undefined;
+  HoraAgendada: Date = undefined;
   NomeServico: string = "";
   Valor: number = undefined;
   Descricao: string = "";
@@ -22,4 +25,5 @@ export class grid implements Igrid {
   PorteAnimal: number = undefined;
   GeneroBiologico: number = undefined;
   NomeRaca: string = "";
+  Status: number = undefined;
 }
